@@ -11,9 +11,14 @@ export function formatPercent(n: number): string {
 }
 
 export function formatWeekLabel(weekStart: string): string {
+  const months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+  // Handle YYYY-MM format (monthly data)
+  if (/^\d{4}-\d{2}$/.test(weekStart)) {
+    const [, month] = weekStart.split('-');
+    return months[parseInt(month, 10) - 1];
+  }
   const date = new Date(weekStart);
   const day = date.getDate();
-  const months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
   return `${day} ${months[date.getMonth()]}`;
 }
 

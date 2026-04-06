@@ -10,6 +10,9 @@ import type {
   DashboardData,
   AndamentoData,
   GHLSyncStatus,
+  MonthlyObjectives,
+  ActionSuggestion,
+  MonthlyData,
 } from '@/types';
 
 // ============================================================
@@ -243,12 +246,15 @@ export const mockAndamentoData: AndamentoData = {
     { weekStart: '2026-03-23', leads: 25, appointments: 10, emailOpened: 163 },
     { weekStart: '2026-03-30', leads: 28, appointments: 12, emailOpened: 177 },
   ],
+  monthlyHistory: [],
   totals: {
     totalReach: 68400,
     totalLeads: 342,
     totalAppointments: 89,
     totalEmailsSent: 5840,
   },
+  collaborationStartDate: '2025-09-15',
+  collaborationMonths: 7,
 };
 
 // ============================================================
@@ -274,6 +280,81 @@ export const mockWeeklySpends = [
 ];
 
 // ============================================================
+// Dati settimana precedente (per confronto)
+// ============================================================
+
+export const mockPreviousAds: AdsData = {
+  weekStart: '2026-03-23',
+  leads: 25,
+  reach: 5900,
+  spend: 370,
+};
+
+export const mockPreviousWhatsApp: WhatsAppStats = {
+  totalDatabase: 3475,
+  contacted: 804,
+  replied: 289,
+  appointments: 86,
+  activeConversations: 38,
+};
+
+export const mockPreviousEmail: EmailData = {
+  weekStart: '2026-03-23',
+  sent: 510,
+  openRate: 32,
+  clicks: 78,
+  replies: 20,
+};
+
+// ============================================================
+// Obiettivi mensili
+// ============================================================
+
+export const mockObjectives: MonthlyObjectives = {
+  leadsTarget: 100,
+  leadsCurrent: 72,
+  appointmentsTarget: 40,
+  appointmentsCurrent: 31,
+  reachTarget: 25000,
+  reachCurrent: 18100,
+};
+
+// ============================================================
+// Suggerimenti AI
+// ============================================================
+
+export const mockSuggestions: ActionSuggestion[] = [
+  {
+    icon: '🎯',
+    text: 'I lead sono in crescita del 12% — ottimo momento per aumentare leggermente il budget e catturare più contatti nella vostra zona.',
+    priority: 'high',
+  },
+  {
+    icon: '📱',
+    text: 'Il 37% dei clienti contattati ha risposto su WhatsApp. Valutate di preparare un\'offerta speciale per chi fissa appuntamento questa settimana.',
+    priority: 'medium',
+  },
+  {
+    icon: '📧',
+    text: 'Il tasso di apertura email è sopra la media del settore. Consigliamo di inviare la prossima newsletter entro giovedì per mantenere il ritmo.',
+    priority: 'low',
+  },
+];
+
+// ============================================================
+// Dati mensili (per Andamento)
+// ============================================================
+
+export const mockMonthlyHistory: MonthlyData[] = [
+  { month: '2025-10', label: 'Ott 2025', leads: 35, appointments: 10, emailsSent: 1200, reach: 8500, spend: 1200 },
+  { month: '2025-11', label: 'Nov 2025', leads: 42, appointments: 14, emailsSent: 1400, reach: 10200, spend: 1300 },
+  { month: '2025-12', label: 'Dic 2025', leads: 38, appointments: 12, emailsSent: 1100, reach: 9800, spend: 1100 },
+  { month: '2026-01', label: 'Gen 2026', leads: 48, appointments: 16, emailsSent: 1600, reach: 12500, spend: 1350 },
+  { month: '2026-02', label: 'Feb 2026', leads: 56, appointments: 20, emailsSent: 1800, reach: 14200, spend: 1400 },
+  { month: '2026-03', label: 'Mar 2026', leads: 72, appointments: 31, emailsSent: 2010, reach: 18100, spend: 1450 },
+];
+
+// ============================================================
 // Helper: get dashboard data per un cliente
 // ============================================================
 
@@ -287,11 +368,17 @@ export function getMockDashboardData(clientId: string): DashboardData | null {
       client,
       weeklyNote: mockWeeklyNote,
       ads: mockCurrentAds,
+      adsPreviousWeek: mockPreviousAds,
       adsHistory: mockAdsHistory,
       whatsapp: mockWhatsAppStats,
+      whatsappPreviousWeek: mockPreviousWhatsApp,
       conversations: mockConversations,
       email: mockCurrentEmail,
+      emailPreviousWeek: mockPreviousEmail,
       emailHistory: mockEmailHistory,
+      objectives: mockObjectives,
+      suggestions: mockSuggestions,
+      lastSyncAt: '2026-04-06T08:02:00Z',
     };
   }
 
@@ -307,6 +394,7 @@ export function getMockDashboardData(clientId: string): DashboardData | null {
       generatedAt: '2026-03-30T08:00:00Z',
     },
     ads: { weekStart: '2026-03-30', leads: 15, reach: 4200, spend: 320 },
+    adsPreviousWeek: { weekStart: '2026-03-23', leads: 14, reach: 3900, spend: 310 },
     adsHistory: [
       { weekStart: '2026-02-23', leads: 8, reach: 2800, spend: 280 },
       { weekStart: '2026-03-02', leads: 10, reach: 3200, spend: 300 },
@@ -316,8 +404,10 @@ export function getMockDashboardData(clientId: string): DashboardData | null {
       { weekStart: '2026-03-30', leads: 15, reach: 4200, spend: 320 },
     ],
     whatsapp: { totalDatabase: 2100, contacted: 520, replied: 180, appointments: 45, activeConversations: 22 },
+    whatsappPreviousWeek: { totalDatabase: 2100, contacted: 490, replied: 165, appointments: 42, activeConversations: 18 },
     conversations: [],
     email: { weekStart: '2026-03-30', sent: 380, openRate: 29, clicks: 52, replies: 11 },
+    emailPreviousWeek: { weekStart: '2026-03-23', sent: 370, openRate: 30, clicks: 48, replies: 10 },
     emailHistory: [
       { weekStart: '2026-02-23', sent: 280, openRate: 25, clicks: 35, replies: 7 },
       { weekStart: '2026-03-02', sent: 310, openRate: 27, clicks: 40, replies: 8 },
@@ -326,11 +416,22 @@ export function getMockDashboardData(clientId: string): DashboardData | null {
       { weekStart: '2026-03-23', sent: 370, openRate: 30, clicks: 48, replies: 10 },
       { weekStart: '2026-03-30', sent: 380, openRate: 29, clicks: 52, replies: 11 },
     ],
+    objectives: { leadsTarget: 60, leadsCurrent: 42, appointmentsTarget: 25, appointmentsCurrent: 18, reachTarget: 15000, reachCurrent: 11800 },
+    suggestions: [
+      { icon: '📈', text: 'Le campagne stanno crescendo costantemente. Continuate così!', priority: 'medium' },
+      { icon: '📧', text: 'Il prossimo invio newsletter è un buon momento per proporre un\'offerta stagionale.', priority: 'low' },
+    ],
+    lastSyncAt: '2026-04-06T08:01:00Z',
   };
 }
 
 export function getMockAndamentoData(clientId: string): AndamentoData {
-  if (clientId === 'client-1') return mockAndamentoData;
+  if (clientId === 'client-1') return {
+    ...mockAndamentoData,
+    monthlyHistory: mockMonthlyHistory,
+    collaborationStartDate: '2025-09-15',
+    collaborationMonths: 7,
+  };
 
   return {
     weeklyHistory: mockAndamentoData.weeklyHistory.map((w) => ({
@@ -339,11 +440,21 @@ export function getMockAndamentoData(clientId: string): AndamentoData {
       appointments: Math.round(w.appointments * 0.5),
       emailOpened: Math.round(w.emailOpened * 0.7),
     })),
+    monthlyHistory: mockMonthlyHistory.map((m) => ({
+      ...m,
+      leads: Math.round(m.leads * 0.6),
+      appointments: Math.round(m.appointments * 0.5),
+      emailsSent: Math.round(m.emailsSent * 0.7),
+      reach: Math.round(m.reach * 0.6),
+      spend: Math.round(m.spend * 0.7),
+    })),
     totals: {
       totalReach: 42000,
       totalLeads: 198,
       totalAppointments: 45,
       totalEmailsSent: 3800,
     },
+    collaborationStartDate: '2025-10-01',
+    collaborationMonths: 6,
   };
 }

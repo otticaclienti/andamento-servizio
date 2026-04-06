@@ -91,15 +91,46 @@ export interface GHLSyncStatus {
   errorMessage?: string;
 }
 
+export interface MonthlyObjectives {
+  leadsTarget: number;
+  leadsCurrent: number;
+  appointmentsTarget: number;
+  appointmentsCurrent: number;
+  reachTarget: number;
+  reachCurrent: number;
+}
+
+export interface ActionSuggestion {
+  icon: string;
+  text: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
 export interface DashboardData {
   client: Client;
   weeklyNote: WeeklyNote | null;
   ads: AdsData;
+  adsPreviousWeek: AdsData;
   adsHistory: AdsData[];
   whatsapp: WhatsAppStats;
+  whatsappPreviousWeek: WhatsAppStats;
   conversations: Conversation[];
   email: EmailData;
+  emailPreviousWeek: EmailData;
   emailHistory: EmailData[];
+  objectives: MonthlyObjectives;
+  suggestions: ActionSuggestion[];
+  lastSyncAt: string;
+}
+
+export interface MonthlyData {
+  month: string;
+  label: string;
+  leads: number;
+  appointments: number;
+  emailsSent: number;
+  reach: number;
+  spend: number;
 }
 
 export interface AndamentoData {
@@ -109,12 +140,15 @@ export interface AndamentoData {
     appointments: number;
     emailOpened: number;
   }[];
+  monthlyHistory: MonthlyData[];
   totals: {
     totalReach: number;
     totalLeads: number;
     totalAppointments: number;
     totalEmailsSent: number;
   };
+  collaborationStartDate: string;
+  collaborationMonths: number;
 }
 
 export type UserSession = {
