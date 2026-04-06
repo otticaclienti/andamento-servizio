@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [noteRead, setNoteRead] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const effectiveClientId = viewAsClientId || user?.clientId;
 
@@ -42,16 +43,20 @@ export default function DashboardPage() {
     }
   }, [user, authLoading, router, viewAsClientId]);
 
+  const loadDashboardData = (clientId: string) => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      const dashData = getMockDashboardData(clientId);
+      setData(dashData);
+      setLoading(false);
+    }, 600);
+    return timer;
+  };
+
   useEffect(() => {
-    if (effectiveClientId) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        const dashData = getMockDashboardData(effectiveClientId);
-        setData(dashData);
-        setLoading(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
+    if (!effectiveClientId) return;
+    const timer = loadDashboardData(effectiveClientId);
+    return () => clearTimeout(timer);
   }, [effectiveClientId]);
 
   if (authLoading || !user) {
@@ -79,6 +84,33 @@ export default function DashboardPage() {
   const now = new Date();
   const monthLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const remainingDays = Math.max(monthLastDay - now.getDate(), 0);
+  const adsTrendDelta = data ? data.adsHistory[data.adsHistory.length - 1].leads - data.adsHistory[0].leads : 0;
+  const adsTrendPercent = data && data.adsHistory[0].leads > 0
+    ? Math.round((adsTrendDelta / data.adsHistory[0].leads) * 100)
+    : 0;
+  const emailTrendDelta = data ? data.emailHistory[data.emailHistory.length - 1].sent - data.emailHistory[0].sent : 0;
+  const emailTrendPercent = data && data.emailHistory[0].sent > 0
+    ? Math.round((emailTrendDelta / data.emailHistory[0].sent) * 100)
+    : 0;
+  const estimatedVisits = data ? Math.round(data.whatsapp.appointments * 0.72) : 0;
+  const visitRate = data && data.whatsapp.appointments > 0
+    ? Math.round((estimatedVisits / data.whatsapp.appointments) * 100)
+    : 0;
+
+  const handleRefresh = () => {
+    if (!effectiveClientId) return;
+    const timer = loadDashboardData(effectiveClientId);
+    setTimeout(() => clearTimeout(timer), 1000);
+  };
+
+  const dismissOnboarding = () => {
+    setShowOnboarding(false);
+  };
+
+  const getConversationContext = (contactName: string) => {
+    const knownClients = ['Mario Rossi', 'Laura Bianchi', 'Anna Conti'];
+    return knownClients.includes(contactName) ? 'Cliente storico' : 'Nuovo contatto';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -119,14 +151,43 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-700">📅 {weekLabel ?? 'Settimana in corso'}</span>
               </div>
-              {data?.lastSyncAt && (
-                <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                  <RefreshCw className="w-3 h-3" />
-                  Aggiornato {new Date(data.lastSyncAt).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} alle {new Date(data.lastSyncAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {data?.lastSyncAt && (
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                    <RefreshCw className="w-3 h-3" />
+                    Aggiornato {new Date(data.lastSyncAt).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} alle {new Date(data.lastSyncAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                )}
+                <button
+                  onClick={handleRefresh}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+                  Aggiorna
+                </button>
+              </div>
             </div>
           </FadeIn>
+
+          {showOnboarding && (
+            <FadeIn delay={50}>
+              <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-blue-800">Benvenuto! Ecco come leggere la dashboard</p>
+                  <p className="text-sm text-blue-700 mt-1">
+                    In alto trovi il riepilogo della settimana, sotto i risultati divisi per Pubblicita, WhatsApp e Email.
+                    Se vuoi dati aggiornati, usa sempre il pulsante "Aggiorna".
+                  </p>
+                </div>
+                <button
+                  onClick={dismissOnboarding}
+                  className="text-xs font-medium text-blue-700 hover:text-blue-900"
+                >
+                  Ho capito
+                </button>
+              </div>
+            </FadeIn>
+          )}
 
           {/* Nota settimanale */}
           {loading ? (
@@ -240,6 +301,10 @@ export default function DashboardPage() {
                     color={client.accentColor}
                     label="Lead"
                   />
+                  <p className="text-xs text-gray-500 mt-3">
+                    Trend mobile rapido: {adsTrendDelta >= 0 ? '+' : ''}{adsTrendDelta} lead nelle ultime 6 settimane
+                    ({adsTrendDelta >= 0 ? '+' : ''}{adsTrendPercent}%).
+                  </p>
                 </div>
               </SectionCard>
             </FadeIn>
@@ -292,6 +357,14 @@ export default function DashboardPage() {
                   />
                 </div>
 
+                <div className="mb-6 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <p className="text-sm font-medium text-gray-700">Dagli appuntamenti alle visite reali</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Stima attuale: circa <span className="font-semibold text-gray-900">{estimatedVisits}</span> visite in negozio su {data.whatsapp.appointments} appuntamenti fissati
+                    ({visitRate}% di conversione stimata).
+                  </p>
+                </div>
+
                 {/* Conversazioni recenti */}
                 {data.conversations.length > 0 && (
                   <div>
@@ -315,9 +388,15 @@ export default function DashboardPage() {
                               <span className="text-xs text-gray-400 shrink-0">{conv.time}</span>
                             </div>
                             <p className="text-sm text-gray-500 truncate">{conv.lastMessage}</p>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${getStatusColor(conv.status)}`}>
-                              {getStatusLabel(conv.status)}
-                            </span>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(conv.status)}`}>
+                                {getStatusLabel(conv.status)}
+                              </span>
+                              <Badge
+                                text={getConversationContext(conv.contactName)}
+                                variant={getConversationContext(conv.contactName) === 'Cliente storico' ? 'success' : 'neutral'}
+                              />
+                            </div>
                           </div>
                         </button>
                       ))}
@@ -387,6 +466,10 @@ export default function DashboardPage() {
                     label1="Inviate"
                     label2="Aperte"
                   />
+                  <p className="text-xs text-gray-500 mt-3">
+                    Trend mobile rapido: {emailTrendDelta >= 0 ? '+' : ''}{emailTrendDelta} email inviate nelle ultime 6 settimane
+                    ({emailTrendDelta >= 0 ? '+' : ''}{emailTrendPercent}%).
+                  </p>
                 </div>
               </SectionCard>
             </FadeIn>
