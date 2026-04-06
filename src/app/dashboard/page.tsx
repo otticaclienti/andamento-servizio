@@ -85,7 +85,10 @@ export default function DashboardPage() {
                 {client.businessName.split(' ').map(w => w[0]).join('').slice(0, 2)}
               </div>
             )}
-            <h1 className="text-base font-semibold text-gray-900 truncate">{client.businessName}</h1>
+            <div className="min-w-0">
+              <h1 className="text-base font-semibold text-gray-900 truncate">{client.businessName}</h1>
+              <p className="text-xs text-gray-500">Aggiornamento settimanale</p>
+            </div>
           </div>
           <div className="hidden lg:block">
             <h1 className="text-xl font-semibold text-gray-900">Questa settimana</h1>
@@ -93,24 +96,25 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div className="px-4 lg:px-8 py-6 space-y-6 max-w-5xl">
+        <div className="px-4 lg:px-8 py-6 space-y-5 lg:space-y-6 max-w-5xl">
           {/* Nota settimanale */}
           {loading ? (
             <SectionCardSkeleton />
           ) : data?.weeklyNote ? (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
-                <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
-                  💬 Il vostro aggiornamento settimanale
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="inline-block w-1.5 h-6 rounded-full" style={{ backgroundColor: client.accentColor }} />
+                  <span>Il vostro aggiornamento settimanale</span>
                 </h3>
                 {!data.weeklyNote.isRead && !noteRead && <Badge text="Nuovo" variant="new" />}
               </div>
-              <div className="p-5">
+              <div className="p-5 lg:p-6">
                 <p className="text-gray-700 leading-relaxed text-[15px]">{data.weeklyNote.content}</p>
                 {!data.weeklyNote.isRead && !noteRead && (
                   <button
                     onClick={() => setNoteRead(true)}
-                    className="mt-3 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                    className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                   >
                     Segna come letto ✓
                   </button>
