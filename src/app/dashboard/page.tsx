@@ -67,10 +67,18 @@ export default function DashboardPage() {
 
   const leadMsg = data ? getLeadMessage(data.ads.leads) : null;
 
-  // Week date range
-  const weekStart = new Date('2026-03-30');
-  const weekEnd = new Date('2026-04-05');
-  const weekLabel = `${weekStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} — ${weekEnd.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  const weekStart = data ? new Date(data.ads.weekStart) : null;
+  const weekEnd = weekStart ? new Date(weekStart) : null;
+  if (weekEnd) weekEnd.setDate(weekEnd.getDate() + 6);
+  const weekLabel = weekStart && weekEnd
+    ? `${weekStart.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} — ${weekEnd.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}`
+    : null;
+
+  const objectivesMonthLabel = new Date().toLocaleDateString('it-IT', { month: 'long' });
+  const monthLabel = objectivesMonthLabel.charAt(0).toUpperCase() + objectivesMonthLabel.slice(1);
+  const now = new Date();
+  const monthLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const remainingDays = Math.max(monthLastDay - now.getDate(), 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -109,7 +117,7 @@ export default function DashboardPage() {
           <FadeIn>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">📅 {weekLabel}</span>
+                <span className="text-sm font-medium text-gray-700">📅 {weekLabel ?? 'Settimana in corso'}</span>
               </div>
               {data?.lastSyncAt && (
                 <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -161,7 +169,7 @@ export default function DashboardPage() {
             <SectionCardSkeleton />
           ) : data?.objectives ? (
             <FadeIn delay={200}>
-              <SectionCard title="Obiettivi di aprile" icon="🎯">
+              <SectionCard title={`Obiettivi di ${monthLabel}`} icon="🎯">
                 <div className="grid grid-cols-3 gap-6">
                   <ProgressRing
                     value={data.objectives.leadsCurrent}
@@ -183,7 +191,7 @@ export default function DashboardPage() {
                   />
                 </div>
                 <p className="text-center text-sm text-gray-500 mt-4 italic">
-                  Mancano ancora {new Date(2026, 3, 30).getDate() - new Date().getDate()} giorni alla fine del mese — siamo sulla buona strada!
+                  Mancano ancora {remainingDays} {remainingDays === 1 ? 'giorno' : 'giorni'} alla fine del mese - siamo sulla buona strada!
                 </p>
               </SectionCard>
             </FadeIn>
@@ -414,9 +422,11 @@ export default function DashboardPage() {
         href="https://wa.me/393XXXXXXXXX"
         target="_blank"
         rel="noopener noreferrer"
-        className="lg:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors"
+        aria-label="Apri WhatsApp e scrivici"
+        className="lg:hidden fixed bottom-20 right-4 z-50 px-4 py-3 bg-green-500 rounded-full flex items-center gap-2 shadow-lg hover:bg-green-600 transition-colors"
       >
         <MessageCircle className="w-6 h-6 text-white" />
+        <span className="text-sm font-medium text-white">Scrivici</span>
       </a>
 
       {/* Conversation Modal */}

@@ -97,7 +97,7 @@ export default function AndamentoPage() {
                     </h2>
                     <p className="text-sm text-gray-500 mt-2">
                       Collaboriamo dal {new Date(data.collaborationStartDate).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}.
-                      {currentMonth && prevMonth && currentMonth.leads > prevMonth.leads
+                      {currentMonth && prevMonth && currentMonth.leads > prevMonth.leads && prevMonth.leads > 0
                         ? ` Questo mese state crescendo del ${Math.round(((currentMonth.leads - prevMonth.leads) / prevMonth.leads) * 100)}% rispetto al mese scorso.`
                         : ' Continuiamo a lavorare insieme per far crescere i risultati.'
                       }
@@ -277,9 +277,11 @@ export default function AndamentoPage() {
         href="https://wa.me/393XXXXXXXXX"
         target="_blank"
         rel="noopener noreferrer"
-        className="lg:hidden fixed bottom-20 right-4 z-50 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors"
+        aria-label="Apri WhatsApp e scrivici"
+        className="lg:hidden fixed bottom-20 right-4 z-50 px-4 py-3 bg-green-500 rounded-full flex items-center gap-2 shadow-lg hover:bg-green-600 transition-colors"
       >
         <MessageCircle className="w-6 h-6 text-white" />
+        <span className="text-sm font-medium text-white">Scrivici</span>
       </a>
     </div>
   );
