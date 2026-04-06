@@ -1,3 +1,4 @@
+// Move to: src/app/api/auth/login/route.ts (for Vercel deployment)
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticate } from '@/lib/auth';
 

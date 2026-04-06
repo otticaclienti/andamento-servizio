@@ -1,10 +1,11 @@
+// Move to: src/app/api/clients/route.ts (for Vercel deployment)
 import { NextResponse } from 'next/server';
 import { mockClients, getMockDashboardData, getMockAndamentoData } from '@/lib/mock-data';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const clientId = searchParams.get('id');
-  const type = searchParams.get('type'); // 'dashboard' | 'andamento' | 'list'
+  const type = searchParams.get('type');
 
   if (type === 'list') {
     return NextResponse.json({
