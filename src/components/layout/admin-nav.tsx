@@ -11,9 +11,9 @@ export function AdminSidebar() {
 
   const links = [
     { href: '/admin', label: 'Panoramica', icon: BarChart3, exact: true },
-    { href: '/admin/clienti', label: 'Clienti', icon: Users },
-    { href: '/admin/spese', label: 'Spese ads', icon: Receipt },
-    { href: '/admin/clienti/nuovo', label: 'Nuovo cliente', icon: UserPlus },
+    { href: '/admin/clienti', label: 'Clienti', icon: Users, exact: true },
+    { href: '/admin/spese', label: 'Spese ads', icon: Receipt, exact: true },
+    { href: '/admin/clienti/nuovo', label: 'Nuovo cliente', icon: UserPlus, exact: true },
   ];
 
   return (
@@ -80,9 +80,9 @@ export function AdminMobileHeader() {
 
   const links = [
     { href: '/admin', label: 'Home', icon: BarChart3, exact: true },
-    { href: '/admin/clienti', label: 'Clienti', icon: Users },
-    { href: '/admin/spese', label: 'Spese', icon: Receipt },
-    { href: '/admin/clienti/nuovo', label: 'Nuovo', icon: UserPlus },
+    { href: '/admin/clienti', label: 'Clienti', icon: Users, exact: true },
+    { href: '/admin/spese', label: 'Spese', icon: Receipt, exact: true },
+    { href: '/admin/clienti/nuovo', label: 'Nuovo', icon: UserPlus, exact: true },
   ];
 
   return (

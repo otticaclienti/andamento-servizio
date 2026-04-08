@@ -228,6 +228,19 @@ export const mockEmailHistory: EmailData[] = [
 ];
 
 // ============================================================
+// Dati mensili (per Andamento)
+// ============================================================
+
+export const mockMonthlyHistory: MonthlyData[] = [
+  { month: '2025-10', label: 'Ott 2025', leads: 35, appointments: 10, emailsSent: 1200, reach: 8500, spend: 1200 },
+  { month: '2025-11', label: 'Nov 2025', leads: 42, appointments: 14, emailsSent: 1400, reach: 10200, spend: 1300 },
+  { month: '2025-12', label: 'Dic 2025', leads: 38, appointments: 12, emailsSent: 1100, reach: 9800, spend: 1100 },
+  { month: '2026-01', label: 'Gen 2026', leads: 48, appointments: 16, emailsSent: 1600, reach: 12500, spend: 1350 },
+  { month: '2026-02', label: 'Feb 2026', leads: 56, appointments: 20, emailsSent: 1800, reach: 14200, spend: 1400 },
+  { month: '2026-03', label: 'Mar 2026', leads: 72, appointments: 31, emailsSent: 2010, reach: 18100, spend: 1450 },
+];
+
+// ============================================================
 // Dati Andamento (storico 12 settimane)
 // ============================================================
 
@@ -246,7 +259,7 @@ export const mockAndamentoData: AndamentoData = {
     { weekStart: '2026-03-23', leads: 25, appointments: 10, emailOpened: 163 },
     { weekStart: '2026-03-30', leads: 28, appointments: 12, emailOpened: 177 },
   ],
-  monthlyHistory: [],
+  monthlyHistory: mockMonthlyHistory,
   totals: {
     totalReach: 68400,
     totalLeads: 342,
@@ -339,19 +352,6 @@ export const mockSuggestions: ActionSuggestion[] = [
     text: 'Il tasso di apertura email è sopra la media del settore. Consigliamo di inviare la prossima newsletter entro giovedì per mantenere il ritmo.',
     priority: 'low',
   },
-];
-
-// ============================================================
-// Dati mensili (per Andamento)
-// ============================================================
-
-export const mockMonthlyHistory: MonthlyData[] = [
-  { month: '2025-10', label: 'Ott 2025', leads: 35, appointments: 10, emailsSent: 1200, reach: 8500, spend: 1200 },
-  { month: '2025-11', label: 'Nov 2025', leads: 42, appointments: 14, emailsSent: 1400, reach: 10200, spend: 1300 },
-  { month: '2025-12', label: 'Dic 2025', leads: 38, appointments: 12, emailsSent: 1100, reach: 9800, spend: 1100 },
-  { month: '2026-01', label: 'Gen 2026', leads: 48, appointments: 16, emailsSent: 1600, reach: 12500, spend: 1350 },
-  { month: '2026-02', label: 'Feb 2026', leads: 56, appointments: 20, emailsSent: 1800, reach: 14200, spend: 1400 },
-  { month: '2026-03', label: 'Mar 2026', leads: 72, appointments: 31, emailsSent: 2010, reach: 18100, spend: 1450 },
 ];
 
 // ============================================================

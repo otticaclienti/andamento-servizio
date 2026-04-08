@@ -8,11 +8,8 @@ import { mockClients, mockSyncStatuses, getMockDashboardData } from '@/lib/mock-
 import { getInitials, formatNumber, formatCurrency } from '@/lib/utils';
 import { AdminSidebar, AdminMobileHeader } from '@/components/layout/admin-nav';
 import {
-  Search, ExternalLink, CheckCircle2, AlertCircle, MinusCircle,
-  ArrowUpDown, Filter, Eye
+  Search, CheckCircle2, AlertCircle, MinusCircle, Eye
 } from 'lucide-react';
-import { useAuth as useAuthCtx } from '@/lib/auth-context';
-
 type SortKey = 'name' | 'leads' | 'appointments' | 'spend' | 'created';
 type FilterStatus = 'all' | 'active' | 'inactive' | 'sync_error' | 'no_spend';
 

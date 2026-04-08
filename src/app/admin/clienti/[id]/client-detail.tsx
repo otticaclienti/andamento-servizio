@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
-import { mockClients, mockSyncStatuses, getMockDashboardData, mockWeeklySpends, mockAdsHistory } from '@/lib/mock-data';
+import { mockClients, mockSyncStatuses, getMockDashboardData, mockWeeklySpends } from '@/lib/mock-data';
 import { getInitials, formatNumber, formatCurrency } from '@/lib/utils';
 import { AdminSidebar, AdminMobileHeader } from '@/components/layout/admin-nav';
 import { FadeIn } from '@/components/ui/fade-in';
