@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Receipt, UserPlus, LogOut, LayoutDashboard } from 'lucide-react';
+import { Users, Receipt, UserPlus, LogOut, LayoutDashboard, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 export function AdminSidebar() {
@@ -10,7 +10,8 @@ export function AdminSidebar() {
   const { logout, user } = useAuth();
 
   const links = [
-    { href: '/admin', label: 'Clienti', icon: Users, exact: true },
+    { href: '/admin', label: 'Panoramica', icon: BarChart3, exact: true },
+    { href: '/admin/clienti', label: 'Clienti', icon: Users },
     { href: '/admin/spese', label: 'Spese ads', icon: Receipt },
     { href: '/admin/clienti/nuovo', label: 'Nuovo cliente', icon: UserPlus },
   ];
@@ -78,7 +79,8 @@ export function AdminMobileHeader() {
   const pathname = usePathname();
 
   const links = [
-    { href: '/admin', label: 'Clienti', icon: Users, exact: true },
+    { href: '/admin', label: 'Home', icon: BarChart3, exact: true },
+    { href: '/admin/clienti', label: 'Clienti', icon: Users },
     { href: '/admin/spese', label: 'Spese', icon: Receipt },
     { href: '/admin/clienti/nuovo', label: 'Nuovo', icon: UserPlus },
   ];
